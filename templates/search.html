@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>UOB POC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+<script src="jquery.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$('#records_table_container').hide();
+							$(".search")
+									.click(
+											function() {
+												var data = JSON.stringify({
+													"uen" : $('#uen').val(),
+													"accountNumber" : $(
+															'#accountNumber')
+															.val(),
+													"entityName" : $(
+															'#entityName')
+															.val()
+												});
+
+												var xhr = new XMLHttpRequest();
+												xhr.withCredentials = true;
+												$("#records_table td").parent().remove();
+												xhr
+														.addEventListener(
+																"readystatechange",
+																function() {
+																	if (this.readyState === 4) {
+																		console
+																				.log(this.responseText);
+																		$(
+																				'#records_table_container')
+																				.show();
+																		var trHTML = '';
+
+																		var result = eval("("
+																				+ this.responseText
+																				+ ")");
+
+																		$
+																				.each(
+																						result,
+																						function(
+																								key,
+																								value) {
+																							trHTML += '<tr><td  onclick="updatescreen('
+																									+ value.id
+																									+ ')">'
+																									+ value.accountNumber
+																									+ '</td><td  onclick="updatescreen('
+																									+ value.id
+																									+ ')">'
+																									+ value.entityName
+																									+ '</td><td  onclick="updatescreen('
+																									+ value.id
+																									+ ')">'
+																									+ value.status
+																									+ '</td><td  onclick="updatescreen('
+																									+ value.id
+																									+ ')">'
+																									+ value.uen
+																									+ '</td><td  align="center"  onclick="resourceScreen('
+																									+ value.id
+																									+ ')"><div class="resource_td" ><img src="images/paper.png"/></div>'
+																							'</td></tr>';
+																						});
+
+																		$(
+																				'#records_table')
+																				.append(
+																						trHTML);
+																	}
+																});
+
+												xhr
+														.open("POST",
+																"http://localhost:8081/api/userprofiles");
+												xhr.setRequestHeader(
+														"content-type",
+														"application/json");
+												xhr.setRequestHeader(
+														"cache-control",
+														"no-cache");
+												xhr
+														.setRequestHeader(
+																"postman-token",
+																"3061b1fd-80d5-a67d-6df9-0ac2e1778e12");
+
+												xhr.send(data);
+
+											});
+
+						});
+		function updatescreen(val) {
+			window.location = 'http://localhost:8081/update#' + val;
+		}
+		function resourceScreen(val) {
+			window.location = 'http://localhost:8081/resource#' + val;
+		}
+	</script>
+
+	<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: 14px;
+}
+
+.form-1 {
+	width: 760px;
+	height: 200px;
+	border: 1px solid black;
+	margin: auto;
+	position: relative;
+}
+
+.form-header {
+	border-bottom: 1px solid black;
+	float: left;
+	position: absolute;
+	width: 760px;
+}
+
+.head-text {
+	float: left;
+	padding: 5px;
+}
+
+.resource_td {
+	text-align: center
+}
+
+.resource_td img {
+	width: 20px;
+	padding: 5px;
+}
+
+.head-icon img {
+	float: right;
+	width: 20px;
+	padding: 5px;
+}
+
+.inputbox {
+	width: 60%;
+	margin: auto;
+	margin-top: 70px;
+}
+
+table {
+	width: 100%;
+}
+
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 10px;
+	text-align: left;
+}
+
+table#records_table tr:nth-child(even) {
+	background-color: #fff;
+}
+
+table#records_table tr:nth-child(odd) {
+	background-color: #eee;
+}
+
+table#records_table th {
+	background-color: gray;
+	color: white;
+}
+</style>
+
+
+	<div class="form-1">
+
+		<div class="form-header">
+
+			<div class="head-text">User Profile Search</div>
+			<div class="head-icon">
+				<a href="update"><img src="images/edit.png" /></a><a
+					onclick="window.location.href = 'http://localhost:8085/add.html';"><img
+					src="images/more.png" /></a><a href="resource"><img
+					src="images/paper.png" /></a><a href="/"><img
+					src="images/search.png" /></a>
+			</div>
+
+		</div>
+
+		<div class="form-box">
+
+			<div class="inputbox">
+				<p>
+					<span class="input_label">Entity Name:</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"
+						name="entityName" id="entityName"
+						style="border-radius: 5px; border: 1px solid black; width: 300px;" />
+				</p>
+				<p>
+					<span class="input_label">Account Number:</span> &nbsp;&nbsp;<input
+						type="text" name="accountNumber" id="accountNumber"
+						style="border-radius: 5px; border: 1px solid black; width: 300px;" />
+				</p>
+				<p>
+					<span class="input_label">UEN Number:</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"
+						name="uen" id="uen"
+						style="border-radius: 5px; border: 1px solid black; width: 300px;" />
+				</p>
+
+				<span class="btn"><input type="button" value="cancel"
+					style="border-radius: 5px; float: left;" /><input type="button"
+					class="search" value="Search"
+					style="border-radius: 5px; float: right; margin-right: 110px;" /></span>
+			</div>
+
+
+		</div>
+
+
+
+
+	</div>
+
+
+	<br />
+	<br />
+	<br />
+	<div id="records_table_container">
+		<table border="0"
+			style="width: 650px; margin: auto; border: 1px solid black; text-align: left;">
+			<tbody>
+
+
+
+
+
+
+
+				<table id="records_table" style="width: 700px; margin: auto;">
+					<tr style="background-color: #eee;">
+						<th colspan="5">User Profile</th>
+
+					</tr>
+					<tr>
+						<th>Account Number</th>
+						<th>Entity Name</th>
+						<th>Status</th>
+						<th>uen</th>
+						<th>Resource</th>
+
+					</tr>
+
+					
+				</table>
+			</tbody>
+		</table>
+	</div>
+	<br />
+	<br />
+
+
+</body>
+</html>

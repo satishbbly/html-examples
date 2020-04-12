@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>UOB POC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+<script src="jquery.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							var accNumber;
+							var accType;
+							var nameHash = location.hash;
+							var newHashName = nameHash.replace("#","");							
+							function getCurrentProfile(val) {
+								$
+										.ajax({
+											url : "http://localhost:8081/api/user-profiles/"
+													+ val,
+											success : function(result) {
+												console.log(result);
+												accNumber = result.accountNumber;
+												accType = result.accountType;
+												$('#entityname').val(
+														result.entityName);
+												$('#accountNumber').val(result.accountNumber);
+											
+
+											}
+										});
+							}
+
+							getCurrentProfile(newHashName);
+							
+							$('.cleartheform').click(function(){
+								window.location.reload(true);
+							})
+							
+
+						$('.submit_resource').click(function(){							
+							var data = JSON.stringify({
+								  "accountNumber": $('#accountNumber').val(),
+								  "resourceId": $('#resourceid').val(),
+								  "userProfileId": 44
+								});
+
+								var xhr = new XMLHttpRequest();
+								xhr.withCredentials = true;
+
+								xhr.addEventListener("readystatechange", function () {
+								  if (this.readyState === 4) {
+								    console.log(this.responseText);
+								    alert('Updated Successfully');
+								    window.location.reload(true);
+								  }
+								});
+
+								xhr.open("POST", "http://localhost:8081/api/resources");
+								xhr.setRequestHeader("content-type", "application/json");
+								xhr.setRequestHeader("cache-control", "no-cache");
+								xhr.setRequestHeader("postman-token", "f62a7911-7ed8-2fea-38fb-8b48ad4dccb0");
+
+								xhr.send(data);
+						})
+							
+
+						});
+	</script>
+	<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: 14px;
+}
+
+.form-1 {
+	width: 760px;
+	height: 200px;
+	border: 1px solid black;
+	margin: auto;
+	position: relative;
+}
+
+.form-header {
+	border-bottom: 1px solid black;
+	float: left;
+	position: absolute;
+	width: 760px;
+}
+
+.head-text {
+	float: left;
+	padding: 5px;
+}
+
+.head-icon img {
+	float: right;
+	width: 20px;
+	padding: 5px;
+}
+
+.inputbox {
+	width: 60%;
+	margin: auto;
+	margin-top: 70px;
+}
+</style>
+
+
+	<div class="form-1">
+
+		<div class="form-header">
+
+			<div class="head-text">Add API User Resource</div>
+			<div class="head-icon">
+				<a href="update"><img src="images/edit.png" /></a><a onclick="window.location.href = 'http://localhost:8085/add.html';"><img
+					src="images/more.png" /></a><a href="resource"><img
+					src="images/paper.png" /></a><a href="/"><img
+					src="images/search.png" /></a>
+			</div>
+		</div>
+		<div class="form-box">
+
+			<div class="inputbox">
+				<table>
+					<p>
+						<span class="input_label">Account Number:</span>
+						&nbsp;&nbsp;&nbsp;<input type="text" disabled='disabled'
+							name="Entityname" id="accountNumber"
+							style="border-radius: 5px; border: 1px solid black; width: 300px;" />
+					</p>
+					<p>
+						<span class="input_label">Entity Name:</span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input disabled='disabled' type="text"
+							name="Entityname" id="entityname"
+							style="border-radius: 5px; border: 1px solid black; width: 300px;" />
+					</p>
+					<p>
+						<span class="input_label">Resource ID:</span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select
+							style="width: 305px" id="resourceid">
+							<option value="">Please Select</option>
+							<option value="COLLECTION">COLLECTION</option>
+							<option value="EDDA">EDDA</option>
+							<option value="EWALLET">EWALLET</option>
+							<option value="PayNow Lookup">PayNow Lookup</option>
+							<option value="PAYMENT">PAYMENT</option>
+						</select>
+					</p>
+
+					<span class="btn"> <input type="button" onclick="window.history.back()" value="Back"
+						style="border-radius: 5px; float: left; margin-left: 100px; width: 70px;" />
+						<input type="button" value="Cancel"
+						style="border-radius: 5px; float: right; margin-right: 15px; width: 70px;" />
+						<input type="button" class="cleartheform" value="Clear"
+						style="border-radius: 5px; float: left; margin-left: 15px; width: 70px;" />
+						<input type="button" class="submit_resource" value="Submit"
+						style="border-radius: 5px; float: right; margin-right: 20px; width: 70px;" /></span>
+				</table>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>
